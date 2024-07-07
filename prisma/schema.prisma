@@ -3,73 +3,73 @@
 // Built on top of https://github.com/AntonioErdeljac/next13-messenger/blob/master/prisma/schema.prisma (MIT licence)
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client-js" // Specifies the generator to create a Prisma client using JavaScript
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider = "mongodb" // Specifies MongoDB as the database provider
+  url      = env("DATABASE_URL") // Gets the database URL from environment variables
 }
 
 model User {
-  id              String   @id @default(auto()) @map("_id") @db.ObjectId
-  firstName       String?
-  lastName        String?
-  username        String   @unique
-  phoneNumber     String   @unique
-  profileImageUrl String?
-  statusImageUrl  String?
-  about           String?
-  externalUserId  String   @unique
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId // Defines the primary key with ObjectId type
+  firstName       String? // Optional field for user's first name
+  lastName        String? // Optional field for user's last name
+  username        String   @unique // Unique username field
+  phoneNumber     String   @unique // Unique phone number field
+  profileImageUrl String? // Optional field for profile image URL
+  statusImageUrl  String? // Optional field for status image URL
+  about           String? // Optional field for user's about section
+  externalUserId  String   @unique // Unique external user ID field
+  createdAt       DateTime @default(now()) // Field to store creation time with default value as current time
+  updatedAt       DateTime @updatedAt // Field to store last updated time, automatically set on update
 
-  conversationIds String[]       @db.ObjectId
-  conversations   Conversation[] @relation(fields: [conversationIds], references: [id])
+  conversationIds String[]       @db.ObjectId // Array of conversation IDs as ObjectId type
+  conversations   Conversation[] @relation(fields: [conversationIds], references: [id]) // Relations to Conversation model
 
-  seenMessageIds String[]  @db.ObjectId
-  seenMessages   Message[] @relation("Seen", fields: [seenMessageIds], references: [id])
+  seenMessageIds String[]  @db.ObjectId // Array of seen message IDs as ObjectId type
+  seenMessages   Message[] @relation("Seen", fields: [seenMessageIds], references: [id]) // Relations to Message model
 
-  followedByIds String[] @db.ObjectId
-  followedBy    User[]   @relation("UserFollows", fields: [followedByIds], references: [id])
+  followedByIds String[] @db.ObjectId // Array of followed by user IDs as ObjectId type
+  followedBy    User[]   @relation("UserFollows", fields: [followedByIds], references: [id]) // Relations to User model for followers
 
-  followingIds String[] @db.ObjectId
-  following    User[]   @relation("UserFollows", fields: [followingIds], references: [id])
+  followingIds String[] @db.ObjectId // Array of following user IDs as ObjectId type
+  following    User[]   @relation("UserFollows", fields: [followingIds], references: [id]) // Relations to User model for followings
 
-  Message Message[]
+  Message Message[] // Relations to Message model
 }
 
 model Conversation {
-  id              String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt       DateTime @default(now())
-  lastMessageAt   DateTime @default(now())
-  name            String?
-  description     String?
-  profileImageUrl String?
-  isGroup         Boolean?
-  isChannel       Boolean?
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId // Defines the primary key with ObjectId type
+  createdAt       DateTime @default(now()) // Field to store creation time with default value as current time
+  lastMessageAt   DateTime @default(now()) // Field to store time of the last message with default value as current time
+  name            String? // Optional field for conversation name
+  description     String? // Optional field for conversation description
+  profileImageUrl String? // Optional field for profile image URL
+  isGroup         Boolean? // Optional field to indicate if the conversation is a group
+  isChannel       Boolean? // Optional field to indicate if the conversation is a channel
 
-  messagesIds String[]  @db.ObjectId
-  messages    Message[]
+  messagesIds String[]  @db.ObjectId // Array of message IDs as ObjectId type
+  messages    Message[] // Relations to Message model
 
-  ownerId String @db.ObjectId
+  ownerId String @db.ObjectId // Field for owner's ID as ObjectId type
 
-  userIds String[] @db.ObjectId
-  users   User[]   @relation(fields: [userIds], references: [id])
+  userIds String[] @db.ObjectId // Array of user IDs as ObjectId type
+  users   User[]   @relation(fields: [userIds], references: [id]) // Relations to User model
 }
 
 model Message {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  body      String?
-  image     String?
-  createdAt DateTime @default(now())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId // Defines the primary key with ObjectId type
+  body      String? // Optional field for message body
+  image     String? // Optional field for message image
+  createdAt DateTime @default(now()) // Field to store creation time with default value as current time
 
-  seenIds String[] @db.ObjectId
-  seen    User[]   @relation("Seen", fields: [seenIds], references: [id])
+  seenIds String[] @db.ObjectId // Array of seen user IDs as ObjectId type
+  seen    User[]   @relation("Seen", fields: [seenIds], references: [id]) // Relations to User model for seen messages
 
-  conversationId String       @db.ObjectId
-  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId String       @db.ObjectId // Field for conversation ID as ObjectId type
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade) // Relation to Conversation model with cascade delete
 
-  senderId String @db.ObjectId
-  sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  senderId String @db.ObjectId // Field for sender's ID as ObjectId type
+  sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade) // Relation to User model with cascade delete
 }

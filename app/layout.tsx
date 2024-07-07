@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import {
   ClerkProvider,
-  SignInButton,
   SignedIn,
   SignedOut,
   UserButton
@@ -25,7 +24,6 @@ export default function RootLayout({
     <html lang='en'>
       <body>
         <SignedOut>
-          <SignInButton />
         </SignedOut>
         <SignedIn>
       
