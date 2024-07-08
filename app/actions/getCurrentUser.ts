@@ -1,5 +1,5 @@
 import { db } from "@/lib/db" // Importing the database instance from the specified path
-import { currentUser } from "@clerk/nextjs" // Importing the currentUser function from Clerk's Next.js package
+import { currentUser } from "@clerk/nextjs/server" // Importing the currentUser function from Clerk's Next.js package
 import { User as ClerkUser } from "@clerk/nextjs/server" // Importing the User type from Clerk's Next.js server package
 import { User as PrismaUser } from "@prisma/client" // Importing the User type from Prisma client
 
